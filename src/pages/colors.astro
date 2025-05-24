@@ -1,0 +1,195 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="Plyo Trainer" description="Plyo Trainer - Colors">
+  <h1>Plyo Trainer - Colors</h1>
+  <form action="#" method="post">
+    <div class="color-option">
+      <input type="checkbox" id="rojo" name="colores" value="rojo" /><div
+        class="color-box"
+        style="background: #ff3b30"
+      >
+      </div><label for="rojo">Red</label>
+    </div>
+    <div class="color-option">
+      <input type="checkbox" id="verde" name="colores" value="verde" /><div
+        class="color-box"
+        style="background: #34c759"
+      >
+      </div><label for="verde">Green</label>
+    </div>
+    <div class="color-option">
+      <input type="checkbox" id="azul" name="colores" value="azul" /><div
+        class="color-box"
+        style="background: #007aff"
+      >
+      </div><label for="azul">Blue</label>
+    </div>
+    <div class="color-option">
+      <input
+        type="checkbox"
+        id="amarillo"
+        name="colores"
+        value="amarillo"
+      /><div class="color-box" style="background: #ffd60a"></div><label
+        for="amarillo">Yellow</label
+      >
+    </div>
+    <div class="color-option">
+      <input type="checkbox" id="morado" name="colores" value="morado" /><div
+        class="color-box"
+        style="background: #af52de"
+      >
+      </div><label for="morado">Purple</label>
+    </div>
+    <div class="color-option">
+      <input type="checkbox" id="naranja" name="colores" value="naranja" /><div
+        class="color-box"
+        style="background: #ff9500"
+      >
+      </div><label for="naranja">Orange</label>
+    </div>
+    <div class="color-option">
+      <input type="checkbox" id="negro" name="colores" value="negro" /><div
+        class="color-box"
+        style="background: #222"
+      >
+      </div><label for="negro">Black</label>
+    </div>
+    <div class="color-option">
+      <input type="checkbox" id="gris" name="colores" value="gris" /><div
+        class="color-box"
+        style="background: #ccc"
+      >
+      </div><label for="gris">Gray</label>
+    </div>
+    <div class="interval-option">
+      <input type"numbers" id="interval" name="interval" value="1000" />
+      <label for="intervalo">Interval (ms)</label>
+    </div>
+    <div class="duration-option">
+      <input type"numbers" id="duration" name="duration" value="60" />
+      <label for="repeticiones">Duration (s)</label>
+    </div>
+    <button type="submit">Enviar</button>
+  </form>
+</Layout>
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('colorsForm')
+    form.addEventListener('submit', function (e) {
+      e.preventDefault()
+      const formData = new FormData(form)
+      const colores = formData.getAll('colores')
+      const interval = formData.get('interval')
+      const duration = formData.get('duration')
+      const info = encodeURIComponent(
+        JSON.stringify({
+          colores,
+          interval,
+          duration,
+        })
+      )
+      window.location.href = `/colors/${info}`
+    })
+  })
+</script>
+
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+
+  .color-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .color-box {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 0 10px;
+    border: 2px solid #fff;
+    transition:
+      box-shadow 0.2s,
+      border 0.2s;
+  }
+
+  input[type='checkbox'] {
+    display: none;
+  }
+
+  label {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #fff;
+    transition:
+      color 0.2s,
+      font-weight 0.2s;
+    margin-left: 5px;
+  }
+
+  input[type='checkbox']:checked + .color-box {
+    box-shadow: 0 0 0 4px #ffd700;
+    border: 2px solid #ffd700;
+  }
+  input[type='checkbox']:checked + .color-box + label {
+    font-weight: bold;
+    color: #ffd700;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+  button:active {
+    background-color: #004085;
+  }
+  button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #0056b3;
+  }
+
+  .interval-option,
+  .duration-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .interval-option input,
+  .duration-option input {
+    width: 60px;
+    margin-left: 10px;
+    padding: 5px;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    border: 2px solid #d4d4d4;
+    color: #fff;
+    background: none;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+</style>
