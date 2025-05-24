@@ -1,0 +1,41 @@
+---
+import Layout from '@/layouts/Layout.astro'
+
+export const prerender = false
+
+const { info } = Astro.params
+let data = { colores: [], interval: '', duration: '' }
+
+try {
+  if (typeof info === 'string') {
+    data = JSON.parse(decodeURIComponent(info))
+  } else {
+    throw new Error('info parameter is undefined or not a string')
+  }
+} catch (e) {
+  console.error('Error parsing info:', e)
+}
+---
+
+<Layout
+  title="Resumen de colores"
+  description="Resumen de selección de colores"
+>
+  <h1>Resumen de selección</h1>
+  <ul>
+    <li>
+      <strong>Colors:</strong>
+      {
+        data.colores && data.colores.length > 0
+          ? data.colores.join(', ')
+          : 'None selected'
+      }
+    </li>
+    <li>
+      <strong>Intervalo (ms):</strong>
+      {data.interval || 'No especificado'}
+    </li>
+    <li><strong>Duración (s):</strong> {data.duration || 'No especificado'}</li>
+  </ul>
+  <a href="/colors">Volver</a>
+</Layout>

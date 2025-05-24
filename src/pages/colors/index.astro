@@ -1,78 +1,75 @@
 ---
-import Layout from '../layouts/Layout.astro'
+import Layout from '@/layouts/Layout.astro'
 ---
 
 <Layout title="Plyo Trainer" description="Plyo Trainer - Colors">
   <h1>Plyo Trainer - Colors</h1>
-  <form action="#" method="post">
+  <form id="colorsForm" method="post">
     <div class="color-option">
-      <input type="checkbox" id="rojo" name="colores" value="rojo" /><div
+      <input type="checkbox" id="red" name="colors" value="red" /><div
         class="color-box"
         style="background: #ff3b30"
       >
-      </div><label for="rojo">Red</label>
+      </div><label for="red">Red</label>
     </div>
     <div class="color-option">
-      <input type="checkbox" id="verde" name="colores" value="verde" /><div
+      <input type="checkbox" id="green" name="colors" value="green" /><div
         class="color-box"
         style="background: #34c759"
       >
-      </div><label for="verde">Green</label>
+      </div><label for="green">Green</label>
     </div>
     <div class="color-option">
-      <input type="checkbox" id="azul" name="colores" value="azul" /><div
+      <input type="checkbox" id="blue" name="colors" value="blue" /><div
         class="color-box"
         style="background: #007aff"
       >
-      </div><label for="azul">Blue</label>
+      </div><label for="blue">Blue</label>
     </div>
     <div class="color-option">
-      <input
-        type="checkbox"
-        id="amarillo"
-        name="colores"
-        value="amarillo"
-      /><div class="color-box" style="background: #ffd60a"></div><label
-        for="amarillo">Yellow</label
+      <input type="checkbox" id="yellow" name="colors" value="yellow" /><div
+        class="color-box"
+        style="background: #ffd60a"
       >
+      </div><label for="yellow">Yellow</label>
     </div>
     <div class="color-option">
-      <input type="checkbox" id="morado" name="colores" value="morado" /><div
+      <input type="checkbox" id="purple" name="colors" value="purple" /><div
         class="color-box"
         style="background: #af52de"
       >
-      </div><label for="morado">Purple</label>
+      </div><label for="purple">Purple</label>
     </div>
     <div class="color-option">
-      <input type="checkbox" id="naranja" name="colores" value="naranja" /><div
+      <input type="checkbox" id="orange" name="colors" value="orange" /><div
         class="color-box"
         style="background: #ff9500"
       >
-      </div><label for="naranja">Orange</label>
+      </div><label for="orange">Orange</label>
     </div>
     <div class="color-option">
-      <input type="checkbox" id="negro" name="colores" value="negro" /><div
+      <input type="checkbox" id="black" name="colors" value="black" /><div
         class="color-box"
         style="background: #222"
       >
-      </div><label for="negro">Black</label>
+      </div><label for="black">Black</label>
     </div>
     <div class="color-option">
-      <input type="checkbox" id="gris" name="colores" value="gris" /><div
+      <input type="checkbox" id="gray" name="colors" value="gray" /><div
         class="color-box"
         style="background: #ccc"
       >
-      </div><label for="gris">Gray</label>
+      </div><label for="gray">Gray</label>
     </div>
     <div class="interval-option">
-      <input type"numbers" id="interval" name="interval" value="1000" />
-      <label for="intervalo">Interval (ms)</label>
+      <label for="interval">Interval (ms)</label>
+      <input type="number" id="interval" name="interval" value="1000" />
     </div>
     <div class="duration-option">
-      <input type"numbers" id="duration" name="duration" value="60" />
-      <label for="repeticiones">Duration (s)</label>
+      <label for="duration">Duration (s)</label>
+      <input type="number" id="duration" name="duration" value="60" />
     </div>
-    <button type="submit">Enviar</button>
+    <button type="submit">Send</button>
   </form>
 </Layout>
 
@@ -82,16 +79,17 @@ import Layout from '../layouts/Layout.astro'
     form.addEventListener('submit', function (e) {
       e.preventDefault()
       const formData = new FormData(form)
-      const colores = formData.getAll('colores')
+      const colors = formData.getAll('colors')
       const interval = formData.get('interval')
       const duration = formData.get('duration')
       const info = encodeURIComponent(
         JSON.stringify({
-          colores,
+          colors,
           interval,
           duration,
         })
       )
+      console.log('info', info)
       window.location.href = `/colors/${info}`
     })
   })
