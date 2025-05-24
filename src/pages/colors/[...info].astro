@@ -63,11 +63,10 @@ try {
     function showFullscreen() {
       mainSection.style.display = 'none'
       fullscreenSection.style.display = 'flex'
-      colorIndex = 0 // <-- Mueve esto antes de usarlo
+      colorIndex = 0
       remaining = duration
       colorTimer.textContent = `Time left: ${remaining}s`
 
-      // Aplica el color al body y al fullscreen-section
       document.body.style.backgroundColor = `${colors[colorIndex]}`
       fullscreenSection.style.backgroundColor = `${colors[colorIndex]}`
 
