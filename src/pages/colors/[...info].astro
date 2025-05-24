@@ -28,32 +28,84 @@ try {
     </span>
   </h2>
 
-  <h2>Interval: {data.interval} seconds</h2>
+  <h2>Interval: {data.interval} miliseconds</h2>
   <h2>Duration: {data.duration} seconds</h2>
 
-  <section>
+  <section id="main-section">
     <a href="/colors">Go to settings</a>
-    <button>Start</button>
+    <button id="start-btn">Start</button>
+  </section>
+
+  <section id="fullscreen-section" style="display:none;">
+    <div
+      id="color-timer"
+      style="font-size:3rem; color:#fff; margin-bottom:2rem;"
+    >
+    </div>
   </section>
 
   <script define:vars={{ data }}>
-    const colors = data.colores
-    const interval = data.interval
-    const duration = data.duration
-    let currentColorIndex = 0
-    let timer
+    const colors = data.colors || []
+    console.log('Colors:', colors)
+    const interval = Number(data.interval) || 1
+    const duration = Number(data.duration) || 1
 
-    function changeColor() {
-      if (currentColorIndex >= colors.length) {
-        clearInterval(timer)
-        return
+    const startBtn = document.getElementById('start-btn')
+    const mainSection = document.getElementById('main-section')
+    const fullscreenSection = document.getElementById('fullscreen-section')
+    const colorTimer = document.getElementById('color-timer')
+
+    let timer
+    let timeout
+    let colorIndex = 0
+    let remaining = duration
+
+    function showFullscreen() {
+      mainSection.style.display = 'none'
+      fullscreenSection.style.display = 'flex'
+      colorIndex = 0 // <-- Mueve esto antes de usarlo
+      remaining = duration
+      colorTimer.textContent = `Time left: ${remaining}s`
+
+      // Aplica el color al body y al fullscreen-section
+      document.body.style.backgroundColor = `${colors[colorIndex]}`
+      fullscreenSection.style.backgroundColor = `${colors[colorIndex]}`
+
+      if (fullscreenSection.requestFullscreen) {
+        fullscreenSection.requestFullscreen()
+      } else if (fullscreenSection.webkitRequestFullscreen) {
+        fullscreenSection.webkitRequestFullscreen()
+      } else if (fullscreenSection.msRequestFullscreen) {
+        fullscreenSection.msRequestFullscreen()
       }
-      document.body.style.backgroundColor = colors[currentColorIndex]
-      currentColorIndex++
+
+      timer = setInterval(() => {
+        colorIndex = (colorIndex + 1) % colors.length
+        document.body.style.backgroundColor = `${colors[colorIndex]}`
+        fullscreenSection.style.backgroundColor = `${colors[colorIndex]}`
+      }, interval)
+
+      timeout = setInterval(() => {
+        remaining--
+        colorTimer.textContent = `Time left: ${remaining}s`
+        if (remaining <= 0) {
+          endFullscreen()
+        }
+      }, 1000)
     }
 
-    timer = setInterval(changeColor, interval * 1000)
-    setTimeout(() => clearInterval(timer), duration * 1000)
+    function endFullscreen() {
+      clearInterval(timer)
+      clearInterval(timeout)
+      document.body.style.backgroundColor = ''
+      fullscreenSection.style.backgroundColor = 'transparent'
+      fullscreenSection.style.display = 'none'
+      mainSection.style.display = 'flex'
+      if (document.fullscreenElement) {
+        document.exitFullscreen()
+      }
+    }
+    startBtn?.addEventListener('click', showFullscreen)
   </script>
 </Layout>
 <style>
@@ -63,6 +115,7 @@ try {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    transition: background 0.3s;
   }
   h1 {
     font-size: 2.5rem;
@@ -85,6 +138,7 @@ try {
     background-color: #007bff;
     border-radius: 5px;
     text-decoration: none;
+    cursor: pointer;
   }
   a:hover,
   button:hover {
@@ -96,5 +150,21 @@ try {
   }
   button {
     border: none;
+  }
+
+  #fullscreen-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
   }
 </style>
