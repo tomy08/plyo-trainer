@@ -3,14 +3,52 @@
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <h1>Plyo Trainer</h1>
+    <a href="/colors">🎨 Plyo with colors!</a>
+    <a href="/numbers">🔢 Plyo with numbers!</a>
+  </body>
 </html>
+
+<style>
+  body {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+
+  a {
+    display: inline-block;
+    margin: 10px;
+    padding: 20px;
+    font-size: 1.5rem;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+
+  a:hover {
+    background-color: #0056b3;
+  }
+  a:active {
+    background-color: #004085;
+  }
+  a:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #0056b3;
+  }
+</style>
