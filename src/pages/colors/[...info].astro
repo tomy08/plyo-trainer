@@ -80,7 +80,7 @@ try {
       }
 
       timer = setInterval(() => {
-        colorIndex = (colorIndex + 1) % colors.length
+        colorIndex = Math.floor(Math.random() * colors.length)
         document.body.style.backgroundColor = `${colors[colorIndex]}`
         fullscreenSection.style.backgroundColor = `${colors[colorIndex]}`
       }, interval)
