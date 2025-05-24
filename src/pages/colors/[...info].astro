@@ -4,7 +4,7 @@ import Layout from '@/layouts/Layout.astro'
 export const prerender = false
 
 const { info } = Astro.params
-let data = { colores: [], interval: '', duration: '' }
+let data = { colors: [], interval: '', duration: '' }
 
 try {
   if (typeof info === 'string') {
@@ -18,24 +18,83 @@ try {
 ---
 
 <Layout
-  title="Resumen de colores"
-  description="Resumen de selección de colores"
+  title="Plyo Trainer - Colors"
+  description="Plyo Trainer - A fun way to train your coordination!"
 >
-  <h1>Resumen de selección</h1>
-  <ul>
-    <li>
-      <strong>Colors:</strong>
-      {
-        data.colores && data.colores.length > 0
-          ? data.colores.join(', ')
-          : 'None selected'
+  <h1>Plyo Trainer - Colors 🎨</h1>
+  <h2>
+    Selected Colors: <span>
+      {data.colors && data.colors.length > 0 ? data.colors.join(', ') : 'None'}
+    </span>
+  </h2>
+
+  <h2>Interval: {data.interval} seconds</h2>
+  <h2>Duration: {data.duration} seconds</h2>
+
+  <section>
+    <a href="/colors">Go to settings</a>
+    <button>Start</button>
+  </section>
+
+  <script define:vars={{ data }}>
+    const colors = data.colores
+    const interval = data.interval
+    const duration = data.duration
+    let currentColorIndex = 0
+    let timer
+
+    function changeColor() {
+      if (currentColorIndex >= colors.length) {
+        clearInterval(timer)
+        return
       }
-    </li>
-    <li>
-      <strong>Intervalo (ms):</strong>
-      {data.interval || 'No especificado'}
-    </li>
-    <li><strong>Duración (s):</strong> {data.duration || 'No especificado'}</li>
-  </ul>
-  <a href="/colors">Volver</a>
+      document.body.style.backgroundColor = colors[currentColorIndex]
+      currentColorIndex++
+    }
+
+    timer = setInterval(changeColor, interval * 1000)
+    setTimeout(() => clearInterval(timer), duration * 1000)
+  </script>
 </Layout>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  h2 span {
+    font-size: 1.5rem;
+  }
+
+  a,
+  button {
+    margin: 10px;
+    padding: 10px;
+    font-size: 1.5rem;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  a:hover,
+  button:hover {
+    background-color: #0056b3;
+  }
+  a:active,
+  button:hover {
+    background-color: #004085;
+  }
+  button {
+    border: none;
+  }
+</style>
