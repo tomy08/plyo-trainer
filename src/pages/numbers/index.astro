@@ -1,0 +1,114 @@
+---
+import Layout from '@/layouts/Layout.astro'
+---
+
+<Layout title="Plyo Trainer" description="Plyo Trainer - Numbers">
+  <h1>Plyo Trainer - Numbers</h1>
+  <form id="numbersForm" method="post">
+    <div class="range-option">
+      <label for="from">From</label>
+      <input type="number" id="from" name="from" value="1" min="1" max="99" />
+      <label for="to" style="margin-left:10px;">To</label>
+      <input type="number" id="to" name="to" value="8" min="1" max="99" />
+    </div>
+    <div class="interval-option">
+      <label for="interval">Interval (ms)</label>
+      <input type="number" id="interval" name="interval" value="1000" />
+    </div>
+    <div class="duration-option">
+      <label for="duration">Duration (s)</label>
+      <input type="number" id="duration" name="duration" value="60" />
+    </div>
+    <button type="submit">Send</button>
+  </form>
+</Layout>
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('numbersForm')
+    form.addEventListener('submit', function (e) {
+      e.preventDefault()
+      const formData = new FormData(form)
+      const from = parseInt(formData.get('from'), 10)
+      const to = parseInt(formData.get('to'), 10)
+      const interval = formData.get('interval')
+      const duration = formData.get('duration')
+      const info = encodeURIComponent(
+        JSON.stringify({
+          from,
+          to,
+          interval,
+          duration,
+        })
+      )
+      console.log('info', info)
+      window.location.href = `/numbers/${info}`
+    })
+  })
+</script>
+
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  .range-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .interval-option,
+  .duration-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .range-option input,
+  .interval-option input,
+  .duration-option input {
+    width: 60px;
+    margin-left: 10px;
+    padding: 5px;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    border: 2px solid #d4d4d4;
+    color: #fff;
+    background: none;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+  label {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #fff;
+    margin-left: 5px;
+  }
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  button:active {
+    background-color: #004085;
+  }
+  button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #0056b3;
+  }
+</style>
