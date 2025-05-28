@@ -42,6 +42,15 @@ try {
       style="font-size:3rem; color:#fff; margin-bottom:2rem;"
     >
     </div>
+    <div
+      id="flash-overlay"
+      style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:white; opacity:0.6; z-index:10000;"
+    >
+    </div>
+    <audio
+      id="beep-sound"
+      src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+      preload="auto"></audio>
   </section>
 
   <script define:vars={{ data }}>
@@ -54,11 +63,25 @@ try {
     const mainSection = document.getElementById('main-section')
     const fullscreenSection = document.getElementById('fullscreen-section')
     const colorTimer = document.getElementById('color-timer')
+    const flashOverlay = document.getElementById('flash-overlay')
+    const beepSound = document.getElementById('beep-sound')
 
     let timer
     let timeout
     let colorIndex = 0
     let remaining = duration
+
+    function flash() {
+      flashOverlay.style.display = 'block'
+      setTimeout(() => {
+        flashOverlay.style.display = 'none'
+      }, 100)
+    }
+
+    function beep() {
+      beepSound.currentTime = 0
+      beepSound.play()
+    }
 
     function showFullscreen() {
       mainSection.style.display = 'none'
@@ -82,6 +105,8 @@ try {
         colorIndex = Math.floor(Math.random() * colors.length)
         document.body.style.backgroundColor = `${colors[colorIndex]}`
         fullscreenSection.style.backgroundColor = `${colors[colorIndex]}`
+        flash()
+        beep()
       }, interval)
 
       timeout = setInterval(() => {
