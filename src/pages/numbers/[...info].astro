@@ -1,0 +1,198 @@
+---
+import Layout from '@/layouts/Layout.astro'
+
+export const prerender = false
+
+const { info } = Astro.params
+let data = { from: 1, to: 8, interval: 1000, duration: 60 }
+
+try {
+  if (typeof info === 'string') {
+    data = JSON.parse(decodeURIComponent(info))
+  } else {
+    throw new Error('info parameter is undefined or not a string')
+  }
+} catch (e) {
+  console.error('Error parsing info:', e)
+}
+---
+
+<Layout
+  title="Plyo Trainer - Numbers"
+  description="Plyo Trainer - A fun way to train your coordination with numbers!"
+>
+  <h1>Plyo Trainer - Numbers 🔢</h1>
+  <h2>
+    Range: <span>{data.from} - {data.to}</span>
+  </h2>
+  <h2>Interval: {data.interval} milliseconds</h2>
+  <h2>Duration: {data.duration} seconds</h2>
+
+  <section id="main-section">
+    <a href="/numbers">Go to settings</a>
+    <button id="start-btn">Start</button>
+  </section>
+
+  <section id="fullscreen-section" style="display:none;">
+    <div
+      id="number-timer"
+      style="font-size:3rem; color:#fff; margin-bottom:2rem;"
+    >
+    </div>
+    <div
+      id="number-display"
+      style="font-size:8rem; color:#fff; font-weight:bold;"
+    >
+    </div>
+    <div
+      id="flash-overlay"
+      style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:white; opacity:0.6; z-index:10000;"
+    >
+    </div>
+    <audio
+      id="beep-sound"
+      src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+      preload="auto"></audio>
+  </section>
+
+  <script define:vars={{ data }}>
+    const from = Number(data.from) || 1
+    const to = Number(data.to) || 8
+    const interval = Number(data.interval) || 1000
+    const duration = Number(data.duration) || 60
+
+    const startBtn = document.getElementById('start-btn')
+    const mainSection = document.getElementById('main-section')
+    const fullscreenSection = document.getElementById('fullscreen-section')
+    const numberTimer = document.getElementById('number-timer')
+    const numberDisplay = document.getElementById('number-display')
+    const flashOverlay = document.getElementById('flash-overlay')
+    const beepSound = document.getElementById('beep-sound')
+
+    let timer
+    let timeout
+    let remaining = duration
+
+    function flash() {
+      flashOverlay.style.display = 'block'
+      setTimeout(() => {
+        flashOverlay.style.display = 'none'
+      }, 100)
+    }
+
+    function beep() {
+      beepSound.currentTime = 0
+      beepSound.play()
+    }
+
+    function randomNumber() {
+      return Math.floor(Math.random() * (to - from + 1)) + from
+    }
+
+    function showFullscreen() {
+      mainSection.style.display = 'none'
+      fullscreenSection.style.display = 'flex'
+      remaining = duration
+      numberTimer.textContent = `Time left: ${remaining}s`
+
+      // Show first number
+      const num = randomNumber()
+      numberDisplay.textContent = num
+
+      if (fullscreenSection.requestFullscreen) {
+        fullscreenSection.requestFullscreen()
+      } else if (fullscreenSection.webkitRequestFullscreen) {
+        fullscreenSection.webkitRequestFullscreen()
+      } else if (fullscreenSection.msRequestFullscreen) {
+        fullscreenSection.msRequestFullscreen()
+      }
+
+      timer = setInterval(() => {
+        const num = randomNumber()
+        numberDisplay.textContent = num
+        flash()
+        beep()
+      }, interval)
+
+      timeout = setInterval(() => {
+        remaining--
+        numberTimer.textContent = `Time left: ${remaining}s`
+        if (remaining <= 0) {
+          endFullscreen()
+        }
+      }, 1000)
+    }
+
+    function endFullscreen() {
+      clearInterval(timer)
+      clearInterval(timeout)
+      numberDisplay.textContent = ''
+      fullscreenSection.style.display = 'none'
+      mainSection.style.display = 'flex'
+      if (document.fullscreenElement) {
+        document.exitFullscreen()
+      }
+    }
+    startBtn?.addEventListener('click', showFullscreen)
+  </script>
+</Layout>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    transition: background 0.3s;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  h2 span {
+    font-size: 1.5rem;
+  }
+
+  a,
+  button {
+    margin: 10px;
+    padding: 10px;
+    font-size: 1.5rem;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  a:hover,
+  button:hover {
+    background-color: #0056b3;
+  }
+  a:active,
+  button:hover {
+    background-color: #004085;
+  }
+  button {
+    border: none;
+  }
+
+  #fullscreen-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+</style>
