@@ -73,6 +73,26 @@ try {
     let timeout
     let remaining = duration
 
+    // Wake Lock API integration
+    let wakeLock = null
+
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen')
+        }
+      } catch (err) {
+        console.error('Wake Lock error:', err)
+      }
+    }
+
+    function releaseWakeLock() {
+      if (wakeLock) {
+        wakeLock.release()
+        wakeLock = null
+      }
+    }
+
     function flash() {
       flashOverlay.style.display = 'block'
       setTimeout(() => {
@@ -89,7 +109,8 @@ try {
       return Math.floor(Math.random() * (to - from + 1)) + from
     }
 
-    function showFullscreen() {
+    async function showFullscreen() {
+      await requestWakeLock()
       mainSection.style.display = 'none'
       fullscreenSection.style.display = 'flex'
       remaining = duration
@@ -124,6 +145,7 @@ try {
     }
 
     function endFullscreen() {
+      releaseWakeLock()
       clearInterval(timer)
       clearInterval(timeout)
       numberDisplay.textContent = ''
