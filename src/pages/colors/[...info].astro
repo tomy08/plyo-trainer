@@ -71,6 +71,26 @@ try {
     let colorIndex = 0
     let remaining = duration
 
+    // Wake Lock API integration
+    let wakeLock = null
+
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen')
+        }
+      } catch (err) {
+        console.error('Wake Lock error:', err)
+      }
+    }
+
+    function releaseWakeLock() {
+      if (wakeLock) {
+        wakeLock.release()
+        wakeLock = null
+      }
+    }
+
     function flash() {
       flashOverlay.style.display = 'block'
       setTimeout(() => {
@@ -83,7 +103,8 @@ try {
       beepSound.play()
     }
 
-    function showFullscreen() {
+    async function showFullscreen() {
+      await requestWakeLock()
       mainSection.style.display = 'none'
       fullscreenSection.style.display = 'flex'
       colorIndex = 0
@@ -119,6 +140,7 @@ try {
     }
 
     function endFullscreen() {
+      releaseWakeLock()
       clearInterval(timer)
       clearInterval(timeout)
       document.body.style.backgroundColor = ''
